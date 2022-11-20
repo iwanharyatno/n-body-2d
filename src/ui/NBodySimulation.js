@@ -26,6 +26,11 @@ class NBodySimulation extends HTMLElement {
     `;
     container.appendChild(controls);
 
+    this.energyDisplay = document.createElement('div');
+    this.energyDisplay.setAttribute('class', 'grid grid-cols-2 gap-3 place-items-center p-4 mt-4');
+
+    container.appendChild(this.energyDisplay);
+
     const replayButton = controls.querySelector('#replay-button');
     const bodiesCountInput = controls.querySelector('#bodies-count');
 
@@ -63,10 +68,28 @@ class NBodySimulation extends HTMLElement {
     this.ctx.fillStyle = '#000000';
     this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
+    let PE = 0;
+    let KE = 0;
+
     for (const body of this.bodies) {
       this.drawBody(body);
       body.move(this.bodies);
+
+      PE += body.potentialEnergy;
+      KE += body.kineticEnergy;
     }
+
+    KE = Math.round(KE / 1e9);
+    PE = Math.round(PE);
+
+    this.energyDisplay.innerHTML = `
+    <div class="font-bold">KE</div>
+    <div>${KE}</div>
+    <div class="font-bold">PE</div>
+    <div>${PE}</div>
+    <div class="font-bold">Total</div>
+    <div>${KE + PE}</div>
+    `;
   }
 
   drawBody(body) {

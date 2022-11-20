@@ -28,6 +28,10 @@ export default class Body {
       accelerationDirection.multiplyScalar(acceleration);
 
       this.velocity.add(accelerationDirection);
+
+      this.potentialEnergy += (-Constants.G * otherBody.mass) / r;
     });
+    
+    this.kineticEnergy = 0.5 * this.mass * Math.pow(this.velocity.magnitude, 2);
   }
 }
